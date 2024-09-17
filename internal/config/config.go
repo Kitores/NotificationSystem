@@ -7,18 +7,28 @@ import (
 	"os"
 )
 
+type Storage struct {
+	Host     string `yaml:"host" env-default:"localhost"`
+	UserDb   string `yaml:"userdb"`
+	Password string `yaml:"password"`
+	Port     int    `yaml:"port" env-default:"5432"`
+	Dbname   string `yaml:"dbname"`
+	SSLmode  string `yaml:"sslmode"`
+}
+
 type HTTPServer struct {
 	Address  string `yaml:"address" env-default:"localhost:8080"`
 	User     string `yaml:"user" env-required:"true"`
-	Password string `yaml:"password" env-required:"true" env:"HTTP-SERVER-PASSWORD"`
+	Password string `yaml:"password" env:"HTTP-SERVER-PASSWORD"`
 }
 type Config struct {
 	Env        string `yaml:"env" env-default:"local"`
 	HTTPServer `yaml:"http_server" env-required:"true"`
+	Storage    `yaml:"storage" env-required:"true"`
 }
 
 func MustLoad() *Config {
-	err := godotenv.Load("config.env")
+	err := godotenv.Load("config/config.env")
 	if err != nil {
 		log.Fatal("Error loading .env file")
 	}

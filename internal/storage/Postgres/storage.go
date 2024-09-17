@@ -1,1 +1,1 @@
-package Postgres
+package postgres
