@@ -33,3 +33,24 @@ func (pg *PostgreSqlx) SaveNewUser(firstName, lastName string, phoneNumber int) 
 	}
 	return err
 }
+
+func (pg *PostgreSqlx) DeleteUser(firstName string, lastName string) error {
+	const funcName = "storage/postgres/DeleteUser()"
+	query := fmt.Sprintf("DELETE FROM users WHERE first_name = '%s' AND last_name = '%s'", firstName, lastName)
+	_, err := pg.db.Exec(query)
+	if err != nil {
+		return fmt.Errorf("Error deleting user from PostgreSQL")
+	}
+	return err
+}
+
+func (pg *PostgreSqlx) GetUsers() error {
+	const funcName = "storage/postgres/GetUsers()"
+	query := "SELECT * FROM users"
+	rows, err := pg.db.Query(query)
+	if err != nil {
+		return fmt.Errorf("Error getting users from PostgreSQL")
+	}
+	fmt.Println(rows)
+	return err
+}

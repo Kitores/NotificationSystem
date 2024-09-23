@@ -1,0 +1,27 @@
+syntax = "proto3";
+
+package user_v1;
+
+option go_package = "NotificationSystem/pkg/user_v1;user_v1";
+
+service UserV1 {
+  rpc CreateNewUser(NewUser) returns (User) {};
+  rpc GetUsers (GetUsersParams) returns (UserList) {};
+}
+
+message NewUser {
+  string first_name = 2;
+  string last_name = 3;
+  string phone_number = 4;
+}
+message User {
+  int64 id = 1;
+  string first_name = 2;
+  string last_name = 3;
+  string phone_number = 4;
+}
+message GetUsersParams {
+}
+message UserList {
+  repeated User users = 1;
+}

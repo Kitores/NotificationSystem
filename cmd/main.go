@@ -2,9 +2,9 @@ package main
 
 import (
 	"NotificationSystem/internal/config"
-	"NotificationSystem/internal/lib/logger/sl"
 	"NotificationSystem/internal/setupLogger"
 	"NotificationSystem/internal/storage/postgres"
+	"NotificationSystem/lib/logger/sl"
 	"fmt"
 	"log/slog"
 	"os"
