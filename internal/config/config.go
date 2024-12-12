@@ -2,9 +2,9 @@ package config
 
 import (
 	"github.com/ilyakaznacheev/cleanenv"
-	"github.com/joho/godotenv"
 	"log"
 	"os"
+	"time"
 )
 
 type Storage struct {
@@ -16,30 +16,32 @@ type Storage struct {
 	SSLmode  string `yaml:"sslmode"`
 }
 
-type HTTPServer struct {
-	Address  string `yaml:"address" env-default:"localhost:8080"`
-	User     string `yaml:"user" env-required:"true"`
-	Password string `yaml:"password" env:"HTTP-SERVER-PASSWORD"`
+type GRPCConfig struct {
+	Port    int           `yaml:"port"`
+	Timeout time.Duration `yaml:"timeout"`
 }
 type Config struct {
-	Env        string `yaml:"env" env-default:"local"`
-	HTTPServer `yaml:"http_server" env-required:"true"`
-	Storage    `yaml:"storage" env-required:"true"`
+	Env     string     `yaml:"env" env-default:"local"`
+	GRPC    GRPCConfig `yaml:"grpc" env-required:"true"`
+	Storage `yaml:"storage" env-required:"true"`
 }
 
 func MustLoad() *Config {
-	err := godotenv.Load("config/config.env")
-	if err != nil {
-		log.Fatal("Error loading .env file")
-	}
+	//err := godotenv.Load("config/config.env")
+	//if err != nil {
+	//	log.Fatalf("Error loading .env file: %v", err)
+	//}
+	//
+	//configPath := os.Getenv("CONFIG_PATH")
+	//if configPath == "" {
+	//	log.Fatal("Error empty config path")
+	//}
 
-	configPath := os.Getenv("CONFIG_PATH")
-	if configPath == "" {
-		log.Fatal("Error empty config path")
-	}
+	configPath := "./config/local.yaml"
+
 	// check if file exists
 	if _, err := os.Stat(configPath); os.IsNotExist(err) {
-		log.Fatalf("CONFIG_PATH file does not exist: %s", configPath)
+		log.Panicf("CONFIG_PATH file does not exist: %s", configPath)
 	}
 	var cfg Config
 	if err := cleanenv.ReadConfig(configPath, &cfg); err != nil {

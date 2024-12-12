@@ -4,9 +4,9 @@ storage:
   host: "localhost"
   port: 5432
   userdb: "postgres"
-  password: ""
+  password: "angelo4ek"
   dbname: "subusers"
   sslmode: "disable"
-http_server:
-  address:  "localhost:8080"
-  user: "mihail"
+grpc_server:
+  port:  "50051"
+  timeout: 5s
