@@ -24,6 +24,7 @@ func NewPg(connString string) (*PostgreSqlx, error) {
 		fmt.Errorf("Error connecting to PostgreSQL")
 		return nil, err
 	}
+	fmt.Println(Db)
 	postgresInit := &PostgreSqlx{db: Db}
 	if postgresInit.db == nil {
 		fmt.Errorf("Error init to PostgreSQL")

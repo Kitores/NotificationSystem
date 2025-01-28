@@ -4,4 +4,4 @@ type UserSaver interface {
 	SaveNewUser(firstName, lastName string, phoneNumber int) error
 }
 
-//func NewMessage(log *slog.Logger, userSaver UserSaver)
+//func NewNotification(log *slog.Logger, userSaver UserSaver)

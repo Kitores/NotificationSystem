@@ -15,7 +15,7 @@ func SendNotificationToBot(text string, sub int32) error {
 		"chat_id": sub,
 		"text":    text,
 	}
-	fmt.Println(message)
+	fmt.Println(message, url)
 	jsonDate, err := json.Marshal(message)
 	if err != nil {
 		return err

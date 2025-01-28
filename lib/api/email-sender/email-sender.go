@@ -12,12 +12,12 @@ const (
 
 func main() {
 	var arr = []string{"mihail_yermolayev@mail.ru"}
-	SendMailFunc("mixa-erm2005@mail.ru", arr, "blyat", "loh sosi", "1YakxkLAy7tf02C3cRHQ")
+	SendMailFunc("", arr, "", "", "")
 
 }
 
 func SendMailFunc(from string, to []string, subject string, content string, password string) error {
-	message := []byte("Subject: Test Email\r\n" +
+	message := []byte("Subject: Test\r\n" +
 		"From: " + from + "\r\n" +
 		"To: mihail_yermolayev@mail.ru\r\n\r\n" +
 		content)

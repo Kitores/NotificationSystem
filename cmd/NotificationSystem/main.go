@@ -38,5 +38,4 @@ func main() {
 	//TODO: logging
 	//TODO: database
 	//TODO: server
-
 }

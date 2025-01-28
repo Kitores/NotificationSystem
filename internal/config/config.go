@@ -2,6 +2,7 @@ package config
 
 import (
 	"github.com/ilyakaznacheev/cleanenv"
+	"github.com/joho/godotenv"
 	"log"
 	"os"
 	"time"
@@ -27,17 +28,17 @@ type Config struct {
 }
 
 func MustLoad() *Config {
-	//err := godotenv.Load("config/config.env")
-	//if err != nil {
-	//	log.Fatalf("Error loading .env file: %v", err)
-	//}
-	//
-	//configPath := os.Getenv("CONFIG_PATH")
-	//if configPath == "" {
-	//	log.Fatal("Error empty config path")
-	//}
+	err := godotenv.Load("config/config.env")
+	if err != nil {
+		log.Fatalf("Error loading .env file: %v", err)
+	}
 
-	configPath := "./config/local.yaml"
+	configPath := os.Getenv("CONFIG_PATH")
+	if configPath == "" {
+		log.Fatal("Error empty config path")
+	}
+
+	//configPath := "./config/local.yaml"
 
 	// check if file exists
 	if _, err := os.Stat(configPath); os.IsNotExist(err) {
