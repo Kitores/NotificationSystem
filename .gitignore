@@ -1,2 +1,3 @@
-/config/config.env
-/config/local.yaml
+notification-service/config/config.env
+notification-service/config/local.yaml
+db/config.env

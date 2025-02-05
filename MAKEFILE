@@ -6,4 +6,4 @@ generate:
 			pkg/service_grpc.proto
 
 
-#protoc -I .\internal\grpc\user_v1 .\internal\grpc\user_v1\service_grpc.proto --go_out=.\internal\grpc\user_v1 --go_opt=paths=source_relative --go-grpc_out=.\internal\grpc\user_v1 --go-grpc_opt=paths=source_relative
+#protoc -I .\internal\кgrpc\user_v1 .\internal\grpc\user_v1\service_grpc.proto --go_out=.\internal\grpc\user_v1 --go_opt=paths=source_relative --go-grpc_out=.\internal\grpc\user_v1 --go-grpc_opt=paths=source_relative
