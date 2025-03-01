@@ -1,3 +1,6 @@
 notification-service/config/config.env
 notification-service/config/local.yaml
-db/config.env
+database/config.env
+database/init.sql
+.env
+MAKEFILE

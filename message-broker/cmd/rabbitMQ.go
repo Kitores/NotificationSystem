@@ -1,10 +1,10 @@
 package main
 
 import (
-	"NotificationSystem/notification-service/pkg/user_v1"
 	"context"
 	"encoding/json"
 	"fmt"
+	"github.com/Kitores/NotificationSystem/mesage-broker/pkg/user_v1"
 	amqp "github.com/rabbitmq/amqp091-go"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
@@ -12,7 +12,6 @@ import (
 	"time"
 )
 
-// package main
 type NotificationRequest struct {
 	Message string `json:"message"`
 }
@@ -26,7 +25,7 @@ func failOnError(err error, msg string) {
 const addres = "localhost:50051"
 
 func handleNotificationRequest(msg *NotificationRequest, client user_v1.UserV1Client, ctx context.Context) {
-	fmt.Println("penis")
+	fmt.Println("Request handle")
 	userList, err := client.SendNotification(ctx, &user_v1.Notification{NotificationText: msg.Message})
 	if err != nil {
 		log.Fatalf("Unable to save new user: %v", err)
@@ -35,7 +34,7 @@ func handleNotificationRequest(msg *NotificationRequest, client user_v1.UserV1Cl
 }
 
 func consumeMessages(conn *amqp.Connection, ch *amqp.Channel, queueName string, client user_v1.UserV1Client, ctx context.Context) {
-	fmt.Println("jopa")
+	fmt.Println("message Consumed...")
 	msgs, err := ch.Consume(
 		queueName,
 		"",

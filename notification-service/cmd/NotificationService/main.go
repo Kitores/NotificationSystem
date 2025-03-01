@@ -1,9 +1,9 @@
 package main
 
 import (
-	"NotificationSystem/notification-service/internal/config"
-	grpc_server "NotificationSystem/notification-service/internal/grpc/grpc-server"
-	"NotificationSystem/notification-service/internal/setupLogger"
+	"github.com/Kitores/NotificationSystem/notification-service/internal/config"
+	grpc_server "github.com/Kitores/NotificationSystem/notification-service/internal/grpc/grpc-server"
+	"github.com/Kitores/NotificationSystem/notification-service/internal/setupLogger"
 	"log/slog"
 )
 
@@ -27,11 +27,11 @@ func main() {
 	//}
 	//fmt.Println(storage)
 
-	//in case of a remote db
+	//in case of a remote database
 	grpc_server.RunGRPCServe(log, cfg)
 
 	//TODO: config
 	//TODO: logging
-	//TODO: db
+	//TODO: database
 	//TODO: server
 }

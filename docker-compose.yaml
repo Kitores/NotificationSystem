@@ -7,29 +7,38 @@ services:
       - db
       - queue
     environment:
-      DB_HOST: db
+      DB_HOST: database
       RABBITMQ_URI: amqp://guest:guest@queue:5672/
     ports:
       - "50051:50051"
 
+  queue:
+    container_name: queue
+    hostname: queue
+    build: ./queue
+    
   message-broker:
-    build: ./message-broker
     container_name: message_broker
+    hostname: message_broker
+    build: ./message-broker
     depends_on:
       - queue
     environment:
       RABBITMQ_URI: amqp://guest:guest@queue:5672/
 
   db:
-    image: postgres:latest
     container_name: db
+    hostname: db
+    build: ./database
     volumes:
-      - ./db:/docker-entrypoint-initdb.d
+      - pgdata:/var/lib/postgresql/data
     env_file:
       - .env
     environment:
       - POSTGRES_USER=${POSTGRES_USER}
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
       - POSTGRES_DB=${POSTGRES_DB}
-#    ports:
-#      - "5432:5432"
+    ports:
+      - "5432:5432"
+    networks:
+      notification_system:

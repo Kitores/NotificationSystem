@@ -28,7 +28,7 @@ type Config struct {
 }
 
 func MustLoad() *Config {
-	err := godotenv.Load("notificationService/config/config.env")
+	err := godotenv.Load("notification-service/config/config.env")
 	if err != nil {
 		log.Fatalf("Error loading .env file: %v", err)
 	}

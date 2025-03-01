@@ -41,7 +41,7 @@ func main() {
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
 
-	body := "Hey, nice cock!"
+	body := "Hey, this is notification!"
 	message := msq{body}
 	marshal, err := json.Marshal(message)
 	for i := 0; i < 2; i++ {
