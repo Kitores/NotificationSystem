@@ -8,7 +8,7 @@ import (
 	"os"
 )
 
-func SendNotificationToBot(text string, sub int32) error {
+func SendNotificationToBot(text string, sub int32, botToken string) error {
 	//for _, sub := range subs {
 	url := fmt.Sprintf("https://api.telegram.org/bot%s/sendMessage", os.Getenv("BOT_TOKEN"))
 	message := map[string]interface{}{

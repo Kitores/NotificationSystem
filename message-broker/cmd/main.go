@@ -4,11 +4,12 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
-	"github.com/Kitores/NotificationSystem/mesage-broker/pkg/user_v1"
+	"github.com/Kitores/NotificationSystem/message-broker/pkg/user_v1"
 	amqp "github.com/rabbitmq/amqp091-go"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
 	"log"
+	"os"
 	"time"
 )
 
@@ -21,8 +22,6 @@ func failOnError(err error, msg string) {
 		log.Panicf("%s: %s", msg, err)
 	}
 }
-
-const addres = "localhost:50051"
 
 func handleNotificationRequest(msg *NotificationRequest, client user_v1.UserV1Client, ctx context.Context) {
 	fmt.Println("Request handle")
@@ -62,16 +61,18 @@ func consumeMessages(conn *amqp.Connection, ch *amqp.Channel, queueName string, 
 }
 
 func main() {
-	conn, err := amqp.Dial("amqp://guest:guest@localhost:5672/")
+	url := os.Getenv("QUEUE_URL")
+	address := os.Getenv("QUEUE_ADDRESS")
+	conn, err := amqp.Dial(url)
 	failOnError(err, "Failed to connect to RabbitMQ")
 	defer conn.Close()
 
-	conn_grpc, err := grpc.NewClient(addres, grpc.WithTransportCredentials(insecure.NewCredentials()))
+	connGrpc, err := grpc.NewClient(address, grpc.WithTransportCredentials(insecure.NewCredentials()))
 	if err != nil {
 		log.Fatal(err)
 	}
-	defer conn_grpc.Close()
-	client := user_v1.NewUserV1Client(conn_grpc)
+	defer connGrpc.Close()
+	client := user_v1.NewUserV1Client(connGrpc)
 	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
 	defer cancel()
 
@@ -80,12 +81,12 @@ func main() {
 	defer ch.Close()
 
 	q, err := ch.QueueDeclare(
-		"hello", // name
-		false,   // durable
-		false,   // delete when unused
-		false,   // exclusive
-		false,   // no-wait
-		nil,     // arguments
+		"notification_queue", // name
+		false,                // durable
+		false,                // delete when unused
+		false,                // exclusive
+		false,                // no-wait
+		nil,                  // arguments
 	)
 	failOnError(err, "Failed to declare a queue")
 
@@ -113,3 +114,4 @@ func main() {
 }
 
 //TODO: запустить докер контейнер RabbitMQ, gRPC-сервер и проверить цепочку отправки сообщений
+//TODO: Дописать докерфайл(или проверить) и организовать работу с конфигом для очереди(хранение юзернейма и пароля)

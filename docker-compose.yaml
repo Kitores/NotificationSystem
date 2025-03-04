@@ -1,34 +1,7 @@
-version: '3.8'
 services:
-  notification-service:
-    build: ./notification-service
-    container_name: notification_service
-    depends_on:
-      - db
-      - queue
-    environment:
-      DB_HOST: database
-      RABBITMQ_URI: amqp://guest:guest@queue:5672/
-    ports:
-      - "50051:50051"
-
-  queue:
-    container_name: queue
-    hostname: queue
-    build: ./queue
-    
-  message-broker:
-    container_name: message_broker
-    hostname: message_broker
-    build: ./message-broker
-    depends_on:
-      - queue
-    environment:
-      RABBITMQ_URI: amqp://guest:guest@queue:5672/
-
   db:
-    container_name: db
-    hostname: db
+    container_name: note-sys-db
+    restart: always
     build: ./database
     volumes:
       - pgdata:/var/lib/postgresql/data
@@ -40,5 +13,40 @@ services:
       - POSTGRES_DB=${POSTGRES_DB}
     ports:
       - "5432:5432"
-    networks:
-      notification_system:
+
+  notification-service:
+    container_name: notification-service
+    build: ./notification-service
+    depends_on:
+      - db
+      - queue
+    env_file:
+      - ./notification-service/.env
+    ports:
+      - "50051:50051"
+
+  queue:
+    container_name: queue
+    build: ./queue
+    env_file:
+      - ./queue/.env
+    environment:
+      - RABBITMQ_DEFAULT_USER=${RABBITMQ_DEFAULT_USER}
+      - RABBITMQ_DEFAULT_PASS=${RABBITMQ_DEFAULT_PASS}
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+
+  message-broker:
+    container_name: message_broker
+    build: ./message-broker
+    depends_on:
+      - queue
+    restart: always
+    env_file:
+      - ./message-broker/.env
+    ports:
+      - "50052:50051"
+
+volumes:
+  pgdata:

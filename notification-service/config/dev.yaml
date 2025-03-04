@@ -5,7 +5,7 @@ grpc_server:
   grpc_port:  "50051"
   timeout: 5s
 storage:
-  host: "note-sys-db"
+  host: "localhost"
   port: 5432
   ssl_mode: "disable"
 smtp_server:

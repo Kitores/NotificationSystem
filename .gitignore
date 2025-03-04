@@ -1,6 +1,6 @@
-notification-service/config/config.env
+notification-service/config/.env
 notification-service/config/local.yaml
 database/config.env
 database/init.sql
-.env
 MAKEFILE
+*.env
