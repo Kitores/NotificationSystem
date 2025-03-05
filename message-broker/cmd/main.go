@@ -27,37 +27,21 @@ func handleNotificationRequest(msg *NotificationRequest, client user_v1.UserV1Cl
 	fmt.Println("Request handle")
 	userList, err := client.SendNotification(ctx, &user_v1.Notification{NotificationText: msg.Message})
 	if err != nil {
-		log.Fatalf("Unable to save new user: %v", err)
+		log.Fatalf("Unable send notification: %v", err)
 	}
 	fmt.Println(userList)
 }
 
-func consumeMessages(conn *amqp.Connection, ch *amqp.Channel, queueName string, client user_v1.UserV1Client, ctx context.Context) {
+func consumeMessages(body []byte, client user_v1.UserV1Client, ctx context.Context) {
+	var request NotificationRequest
+	fmt.Println(string(body))
+	err := json.Unmarshal(body, &request)
+	if err != nil {
+		log.Printf("Failed to unmarshal message: %s", err)
+	}
+	handleNotificationRequest(&request, client, ctx)
+
 	fmt.Println("message Consumed...")
-	msgs, err := ch.Consume(
-		queueName,
-		"",
-		true,
-		false,
-		false,
-		false,
-		nil,
-	)
-	failOnError(err, "Failed to register a consumer")
-
-	go func() {
-		for d := range msgs {
-			var request NotificationRequest
-			fmt.Println(string(d.Body))
-			err := json.Unmarshal(d.Body, &request)
-			if err != nil {
-				log.Printf("Failed to unmarshal message: %s", err)
-				continue
-			}
-
-			handleNotificationRequest(&request, client, ctx)
-		}
-	}()
 }
 
 func main() {
@@ -73,7 +57,7 @@ func main() {
 	}
 	defer connGrpc.Close()
 	client := user_v1.NewUserV1Client(connGrpc)
-	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
+	ctx, cancel := context.WithTimeout(context.Background(), time.Second*10)
 	defer cancel()
 
 	ch, err := conn.Channel()
@@ -102,16 +86,15 @@ func main() {
 	failOnError(err, "Failed to register a consumer")
 
 	var forever chan struct{}
-	consumeMessages(conn, ch, q.Name, client, ctx)
+
 	go func() {
 		for d := range msgs {
 			log.Printf("Received a message: %s", d.Body)
+			consumeMessages(d.Body, client, ctx)
+			//handleNotificationRequest(d.Body, client, ctx)
 		}
 	}()
 
 	log.Printf(" [*] Waiting for messages. To exit press CTRL+C")
 	<-forever
 }
-
-//TODO: запустить докер контейнер RabbitMQ, gRPC-сервер и проверить цепочку отправки сообщений
-//TODO: Дописать докерфайл(или проверить) и организовать работу с конфигом для очереди(хранение юзернейма и пароля)

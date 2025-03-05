@@ -1,4 +1,4 @@
-env: "local"
+env: "dev"
 
 grpc_server:
   grpc_host: "localhost"

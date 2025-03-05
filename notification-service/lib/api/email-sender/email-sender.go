@@ -10,6 +10,7 @@ func SendMailFunc(to []string, subject, content, mailFrom, mailPass, mailHost, m
 		"From: " + mailFrom + "\r\n\r\n" +
 		content)
 	auth := smtp.PlainAuth("", mailFrom, mailPass, mailHost)
+	fmt.Println(mailFrom, mailPass)
 
 	err := smtp.SendMail(mailHost+":"+mailPort, auth, mailFrom, to, message)
 	if err != nil {
